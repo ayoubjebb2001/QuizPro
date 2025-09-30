@@ -7,10 +7,22 @@ exports.createCategory = (newCategory, callback) => {
     const values = [newCategory.name, newCategory.description];
 
     db.query(sql, values, callback);
+};exports.updateCategoryAsync = function(infoCatego, categoryId) {
+    return new Promise((resolve, reject) => {
+        const sql = "UPDATE categories SET NAME = ?, description = ? WHERE id = ?";
+        db.query(sql, [infoCatego.name, infoCatego.description, categoryId], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
 };
-exports.updateCategory=(infoCatego,CategoryId,callback)=>{
- const sql="UPDATE  categories SET ? WHERE ?";
- const values=[infoCatego.name,infoCatego.description];
- const categoryid=CategoryId;
- db.query(sql,values,categoryid,callback);
-}
+
+exports.deleteCategoryAsync = function(categoryId) {
+    return new Promise((resolve, reject) => {
+        const sql = "DELETE FROM categories WHERE id = ?";
+        db.query(sql, categoryId, (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};

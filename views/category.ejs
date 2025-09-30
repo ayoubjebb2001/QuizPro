@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter Catégorie - Dashboard Admin</title>
+<link rel="stylesheet" href="/css/category.css">
+
+    <style>
+       
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">🎨</div>
+            <h2>Dashboard Admin</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#"><i>📊</i> Tableau de bord</a></li>
+            <li><a href="#"><i>👥</i> Utilisateurs</a></li>
+            <li><a href="#"><i>📝</i> Articles</a></li>
+            <li class="active"><a href="#"><i>📂</i> Catégories</a></li>
+            <li><a href="#"><i>🎨</i> Thèmes</a></li>
+            <li><a href="#"><i>⚙️</i> Paramètres</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>Gestion des Catégories</h1>
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=8B4513&color=fff" alt="Admin">
+                <span>Administrateur</span>
+            </div>
+        </div>
+
+        <!-- Category Form Container -->
+        <div class="category-container">
+            <div class="form">
+                <h2>Ajouter une Catégorie</h2>
+                
+                <form  method="POST"id="categoryForm" action="/category/add">
+                    <div class="form-group">
+                        <label for="categoryName">Nom de la catégorie</label>
+                        <input type="text" id="categoryName" name="name" placeholder="Entrez le nom de la catégorie" required>
+                    </div>
+                      <div class="form-group">
+                        <label for="categoryName">description</label>
+                        <input type="text" id="categoryDescription" name="description" placeholder="Entrez description de la catégorie" >
+                    </div>
+                    <button type="submit" class="btn-submit">Ajouter la Catégorie</button>
+                </form>
+            </div>
+    
+        </div>
+
+        <!-- Categories Table -->
+        <div class="categories-table">
+            <h2>Catégories existantes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Description</th>
+                      
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(categories && categories.length>0){%>
+                        <% categories.forEach(category=>{%>
+                    <tr>
+                        <td><%=category.NAME %></td>
+                        <td><%=category.description%></td>
+                        
+
+                        <td>
+                            <div class="action-buttons">
+                              
+                              <button class="btn-edit"  data-description="<%=category.description%>"data-name="<%= category.NAME %>" data-id="<%= category.id %>">Modifier</button>
+
+                                 <button class="btn-delete" data-id="<%= category.id %>">Supprimer</button>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <%})%>
+                    <% }%>
+                   
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="/js/categories.js">
+      
+    </script>
+</body>
+</html>

@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter Catégorie - Dashboard Admin</title>
-<link rel="stylesheet" href="/css/category.css">
-
-    <style>
-       
-    </style>
+    <title>Gestion Catégories - Dashboard Admin</title>
+   <link rel="stylesheet" href="/css/category.css">
+    
 </head>
 <body>
     <!-- Sidebar -->
@@ -37,24 +34,24 @@
             </div>
         </div>
 
-        <!-- Category Form Container -->
+        <!-- Category Form Container - Compact -->
         <div class="category-container">
-            <div class="form">
-                <h2>Ajouter une Catégorie</h2>
-                
-                <form  method="POST"id="categoryForm" action="/category/add">
+            <h2>Ajouter une Catégorie</h2>
+            <p class="subtitle">Entrez les informations de la catégorie</p>
+            
+            <form method="POST" id="categoryForm" action="/category/add">
+                <div class="form-row">
                     <div class="form-group">
                         <label for="categoryName">Nom de la catégorie</label>
-                        <input type="text" id="categoryName" name="name" placeholder="Entrez le nom de la catégorie" required>
+                        <input type="text" id="categoryName" name="name" placeholder="Nom de la catégorie" required>
                     </div>
-                      <div class="form-group">
-                        <label for="categoryName">description</label>
-                        <input type="text" id="categoryDescription" name="description" placeholder="Entrez description de la catégorie" >
+                    <div class="form-group">
+                        <label for="categoryDescription">Description</label>
+                        <input type="text" id="categoryDescription" name="description" placeholder="Description courte">
                     </div>
-                    <button type="submit" class="btn-submit">Ajouter la Catégorie</button>
-                </form>
-            </div>
-    
+                    <button type="submit" class="btn-submit">Ajouter</button>
+                </div>
+            </form>
         </div>
 
         <!-- Categories Table -->
@@ -95,8 +92,6 @@
         </div>
     </div>
 
-    <script src="/js/categories.js">
-      
-    </script>
+    <script src="/js/categories.js"></script>
 </body>
 </html>

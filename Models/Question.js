@@ -1,9 +1,10 @@
 const db = require('../config/database');
 exports.getAll = (callback) => {
     const sql = `
-        SELECT c.id as category_id, c.description, c.name,q.question, q.options, q.answer
-        FROM categories c
-        JOIN questions q ON c.id = q.category_id 
+       SELECT c.id as category_id, c.description, c.name, q.question, q.options, q.answer
+FROM categories c
+JOIN questions q ON c.id = q.category_id
+
     `;
     db.query(sql, callback);
 };
@@ -23,7 +24,7 @@ const values = [
    data.question,
    data.category_id,
     JSON.stringify(data.options),
-    JSON.stringify(data.correct_answers),
+    JSON.stringify(data.answer),
     QuestionId
 ];
  db.query(sql,values,callback);

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Questions - Dashboard Admin</title>
+  <link rel="stylesheet" href="/css/gestionQ.css">
+   
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">🎨</div>
+            <h2>Dashboard Admin</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#"><i>📊</i> Tableau de bord</a></li>
+            <li><a href="#"><i>👥</i> Utilisateurs</a></li>
+            <li><a href="#"><i>📝</i> Articles</a></li>
+            <li><a href="#"><i>📂</i> Catégories</a></li>
+            <li class="active"><a href="#"><i>❓</i> Questions</a></li>
+            <li><a href="#"><i>🎨</i> Thèmes</a></li>
+            <li><a href="#"><i>⚙️</i> Paramètres</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>Gestion des Questions</h1>
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=8B4513&color=fff" alt="Admin">
+                <span>Administrateur</span>
+            </div>
+        </div>
+
+        <div class="questions-table">
+            <h2>Questions existantes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Catégorie</th>
+
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <% if (questions && questions.length > 0) { %>
+    <% questions.forEach(q => { %>
+        <tr>
+            <td><%= q.question %></td>
+            <td><%= q.name %></td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn-edit" data-id="<%= q.id %>">Modifier</button>
+                    <button class="btn-delete" data-id="<%= q.id %>">Supprimer</button>
+                </div>
+            </td>
+        </tr>
+    <% }) %>
+<% } %>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="/js/gestionQ.js"></script>
+</body>
+</html>

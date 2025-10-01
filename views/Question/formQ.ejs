@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter une Question</title>
+    <link rel="stylesheet" href="/css/formQ.css">
+    
+</head>
+<body>
+    
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1>Question</h1>
+                <p>Fill the form to create a question</p>
+            </div>
+
+            <form id="questionForm" >
+                <div class="form-group">
+                    <label for="question">Question</label>
+                    <textarea id="question" name="question" placeholder="You question texts goes here" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" required>
+                      
+    <% categories.forEach(cat => { %>
+        <option value="<%= cat.id %>"><%= cat.NAME %></option>
+    <% }) %>
+
+
+                       
+                      
+                       
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Answer</label>
+                    <div id="answersContainer">
+                        <div class="answer-item">
+                            <input type="text" placeholder="answer goes here" class="answer-input" required>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add" id="addAnswerBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8"/>
+                        </svg>
+                        add answer
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label>Correct Answers</label>
+                    <p class="helper-text">choose one or more options</p>
+                    <div id="correctAnswersContainer">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="correct1" value="0">
+                            <label for="correct1">answer 1</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-save">Save Question</button>
+            </form>
+        </div>
+    </div>
+<script src="/js/formQ.js"></script>
+   
+</body>
+</html>

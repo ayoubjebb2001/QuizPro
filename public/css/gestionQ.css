@@ -145,7 +145,27 @@
 
       
 
-       
+       .add-question-btn {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.btn-add-question {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-add-question:hover {
+    background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
+    transform: translateY(-2px);
+}
+
 
     
         /* Questions Table */

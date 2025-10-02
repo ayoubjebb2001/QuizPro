@@ -86,7 +86,7 @@ console.log("url",url);
         const data = await response.json();
         if (response.ok) {
             alert('✅ Question sauvegardée avec succès !');
-            window.location.href = "/question"; // retour à la liste
+            window.location.href = "/question"; 
         } else {
             console.log('error : ' + data.message);
         }

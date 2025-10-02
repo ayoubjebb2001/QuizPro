@@ -21,17 +21,15 @@ exports.delete=(QuestionId,callback)=>{
     const sql="DELETE FROM questions WHERE id=?";
     db.query(sql,QuestionId,callback);
 }
-exports.update=(QuestionId,data,callback)=>{
+exports.update = (QuestionId, data, callback) => {
+    const sql = "UPDATE questions SET question=?, category_id=?, options=?, answer=? WHERE id=?";
+    const values = [
+        data.question,
+        data.category_id,
+        JSON.stringify(data.options),
+        JSON.stringify(data.answer),
+        QuestionId
+    ];
+    db.query(sql, values, callback);
+};
 
-const sql="UPDATE questions SET question=?,category_id=?,options=?,answer=? WHERE id=?";
-const values = [
-   data.question,
-   data.category_id,
-    JSON.stringify(data.options),
-    JSON.stringify(data.answer),
-    QuestionId
-];
- db.query(sql,values,callback);
-
-
-}

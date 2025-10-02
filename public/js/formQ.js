@@ -2,6 +2,17 @@
         const answersContainer = document.getElementById('answersContainer');
         const correctAnswersContainer = document.getElementById('correctAnswersContainer');
         const addAnswerBtn = document.getElementById('addAnswerBtn');
+ if(addAnswerBtn){
+   answersContainer.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('btn-remove')) {
+        const answerItem = e.target.closest('.answer-item');
+        const index = Array.from(answersContainer.children).indexOf(answerItem);
+        answerItem.remove();
+       
+        correctAnswersContainer.children[index].remove();
+        updateAnswerLabels();
+    }
+});
 
         addAnswerBtn.addEventListener('click', function() {
             answerCount++;
@@ -29,7 +40,7 @@
                 correctAnswersContainer.children[index].remove();
                 updateAnswerLabels();
             });
-        });
+        });}
 
         function updateAnswerLabels() {
             const checkboxGroups = correctAnswersContainer.querySelectorAll('.checkbox-group');
@@ -44,47 +55,43 @@
             answerCount = checkboxGroups.length;
         }
 
-       document.getElementById('questionForm').addEventListener('submit', async function (e) {
+      document.getElementById('questionForm').addEventListener('submit', async function (e) {
     e.preventDefault();
-    
+
     const question = document.getElementById('question').value;
     const category_id = document.getElementById('category').value;
     const options = Array.from(document.querySelectorAll('.answer-input')).map(input => input.value);
     const correctAnswers = Array.from(document.querySelectorAll('#correctAnswersContainer input:checked')).map(cb => parseInt(cb.value));
-
+ console.log("les options",options);
     if (correctAnswers.length === 0) {
         alert('Veuillez sélectionner au moins une réponse correcte');
         return;
     }
 
-    const payload = {
-        question,
-        category_id,
-        options,
-        answer: correctAnswers
-    };
-    console.log("test",payload);
+    const payload = { question, category_id, options,answer: correctAnswers };
 
+ const QuestionId = document.getElementById('questionId').value;
+    const url = QuestionId ? `/question/update/${QuestionId}` : '/question/add';
+    const method = QuestionId ? 'PUT' : 'POST';
+console.log("ghir kanshofo wsfi ",payload);
+console.log("url",url);
     try {
-        const response = await fetch('/question/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+        
+        const response = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
         const data = await response.json();
         if (response.ok) {
-            alert(' Question ajoutée avec succès !');
-            console.log(data);
-          
-            document.getElementById('questionForm').reset();
+            alert('✅ Question sauvegardée avec succès !');
+            window.location.href = "/question"; // retour à la liste
         } else {
             console.log('error : ' + data.message);
         }
     } catch (err) {
         console.error('Erreur de requête :', err);
-        
     }
 });
+

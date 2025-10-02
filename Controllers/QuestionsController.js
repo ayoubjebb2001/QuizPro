@@ -53,16 +53,15 @@ exports.DeleteQuestion=function(req,res){
     }})
 
 }
-exports.UpdateQuestion=function(req,res){
-    const {questions,category_id,options,answer}=req.body;
-    const data= {questions,category_id,options,answer};
+exports.UpdateQuestion = function(req, res) {
+    const { question, category_id, options, answer } = req.body;
+    const data = { question, category_id, options, answer };
 
-    Question.update(req.params.id,data,(err,result)=>{
-
-if(err) return res.status(500).json({error:err.message});
-res.json({message:'Question updated avec succes'});
-    })
-      
-
-
-}
+    Question.update(req.params.id, data, (err, result) => {
+        if (err) {
+            console.error("Erreur SQL :", err); 
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ message: 'Question updated avec succès' });
+    });
+};

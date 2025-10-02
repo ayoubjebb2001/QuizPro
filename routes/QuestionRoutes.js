@@ -33,7 +33,7 @@ router.get('/add', (req, res) => {
         if (err) return res.status(500).json({ error: err });
         res.render('Question/formQ', { 
             categories, 
-            questions: null  // باش ejs يلقاها ديما
+            questions: []  // باش ejs يلقاها ديما
         }); 
     });
 });

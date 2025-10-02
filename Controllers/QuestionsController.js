@@ -21,6 +21,7 @@ exports.getAllQuestion = function (req, res) {
 };
 
 
+
 exports.createQuestion = function (req, res) {
     const { question, category_id, options, answer } = req.body;
   

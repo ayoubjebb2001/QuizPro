@@ -32,5 +32,10 @@ exports.update = (QuestionId, data, callback) => {
     ];
     db.query(sql, values, callback);
 };
+exports.QuestionParCategory= function(categoryId,callback){
+const sql ="SELECT c.id  as category_id, c.description,c.name,q.id,q.answer,q.options FROM categories c JOIN questions q ON c.id=q.category_id WHERE q.category_id=? "
+ db.query(sql,categoryId,callback);
+
+}
 
 

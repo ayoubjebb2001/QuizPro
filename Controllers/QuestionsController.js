@@ -65,3 +65,14 @@ exports.UpdateQuestion = function(req, res) {
         res.json({ message: 'Question updated avec succès' });
     });
 };
+
+exports.QuestionParCategory= function(req,res){
+
+     const categoryId=req.params.id;
+     Question.QuestionParCategory(categoryId,(err,result)=>{
+
+        if(err)
+            return res.status(500).json({error:err.message});
+     })
+     res.json({message: " questions par category  est :",questions:result});
+}

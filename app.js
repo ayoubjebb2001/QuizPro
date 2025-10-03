@@ -10,6 +10,7 @@ var signupRouter = require('./routes/signup');
 var usersRouter = require('./routes/users');
 var categoryRouter=require('./routes/category');
 var questionRouter=require('./routes/QuestionRoutes');
+var quizRouter=require('./routes/Quiz');
 
 var app = express();
 
@@ -25,8 +26,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.use('/', indexRouter);
+app.use()
+// app.use('/', indexRouter);
 app.use('/signup',signupRouter);
 app.use('/users', usersRouter);
 app.use('/category',categoryRouter);

@@ -27,7 +27,7 @@ class AuthController {
             const newUser = await User.create(username, password);
 
 
-            res.status(201).send();
+            res.status(201).render('login',{username : username});
 
         } catch (error) {
             console.error('Signup error:', error);
@@ -75,15 +75,11 @@ class AuthController {
                 role: user.role
             };
 
-            res.status(200).json({
-                success: true,
-                message: 'Login successful',
-                user: {
-                    id: user.id,
-                    username: user.username,
-                    role: user.role
-                }
-            });
+            if(user.role == "user"){
+                res.redirect('user/dashboard');
+            }else{
+                res.redirect("question/")
+            }
         } catch (error) {
             console.error('Login error:', error);
             res.status(500).json({

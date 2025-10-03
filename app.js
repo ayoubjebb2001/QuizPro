@@ -40,9 +40,10 @@ app.use(session({
 }));
 
 
-app.use('/', indexRouter);
+app.use('/home',auth ,indexRouter);
 app.use('/signup',signupRouter);
 app.use('/auth',authRouter);
+
 app.use('/users', admin, usersRouter);
 app.use('/category',admin,categoryRouter);
 app.use('/question',questionRouter);

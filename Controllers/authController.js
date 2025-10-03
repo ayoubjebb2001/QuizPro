@@ -26,19 +26,95 @@ class AuthController {
             // Create new user
             const newUser = await User.create(username, password);
 
-            // Success response
-            res.status(201).json({
-                success: true,
-                message: 'User created successfully',
-                user: {
-                    id: newUser.id,
-                    username: newUser.username,
-                    role: newUser.role
-                }
-            });
+
+            res.status(201).send();
 
         } catch (error) {
             console.error('Signup error:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            });
+        }
+    }
+
+    static async login(req, res) {
+
+        try {
+
+
+            const { username, password } = req.body;
+
+            if (!username || !password) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Username and password are required'
+                });
+            }
+
+            const user = await User.findByUsername(username);
+
+            if (!user) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Invalid username or password'
+                });
+            }
+
+            const isPasswordValid = await User.validatePassword(password, user.password);
+            if (!isPasswordValid) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Invalid username or password'
+                })
+            }
+
+            req.session.user = {
+                id: user.id,
+                username: user.username,
+                role: user.role
+            };
+
+            res.status(200).json({
+                success: true,
+                message: 'Login successful',
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    role: user.role
+                }
+            });
+        } catch (error) {
+            console.error('Login error:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Internat server error'
+            })
+        }
+
+    }
+
+    static logout(req, res) {
+        try {
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error('Logout error:', err);
+                    return res.status(500).json({
+                        success: false,
+                        message: 'Error logging out'
+                    });
+                }
+
+                // Clear the session cookie
+                res.clearCookie('connect.sid');
+
+                res.status(200).json({
+                    success: true,
+                    message: 'Logout successful'
+                });
+            });
+        } catch (error) {
+            console.error('Logout error:', error);
             res.status(500).json({
                 success: false,
                 message: 'Internal server error'

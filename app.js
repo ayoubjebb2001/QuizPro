@@ -12,6 +12,7 @@ var signupRouter = require('./routes/signup');
 var authRouter = require('./routes/login');
 var usersRouter = require('./routes/users');
 var categoryRouter=require('./routes/category');
+var questionRouter=require('./routes/QuestionRoutes');
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -43,6 +45,7 @@ app.use('/signup',signupRouter);
 app.use('/auth',authRouter);
 app.use('/users', admin, usersRouter);
 app.use('/category',admin,categoryRouter);
+app.use('/question',questionRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

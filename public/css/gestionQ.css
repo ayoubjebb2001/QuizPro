@@ -1,4 +1,5 @@
- * {
+ <style>
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -109,8 +110,8 @@
             margin-right: 10px;
         }
 
-        /* Category Form Container - Compact */
-        .category-container {
+        /* Question Form Container */
+        .question-container {
             background: white;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(139, 69, 19, 0.15);
@@ -130,83 +131,45 @@
             }
         }
 
-        .category-container h2 {
+        .question-container h2 {
             color: #654321;
             font-size: 1.5em;
             margin-bottom: 5px;
         }
 
-        .category-container .subtitle {
+        .question-container .subtitle {
             color: #666;
             margin-bottom: 20px;
             font-size: 0.9em;
         }
 
-        .form-row {
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-        }
+      
 
-        .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
+       .add-question-btn {
+    margin-bottom: 20px;
+    text-align: right;
+}
 
-        .form-group label {
-            display: block;
-            color: #654321;
-            margin-bottom: 5px;
-            font-weight: 500;
-            font-size: 0.9em;
-        }
+.btn-add-question {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
 
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
-            background: #F5F7FA;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+.btn-add-question:hover {
+    background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
+    transform: translateY(-2px);
+}
 
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #8B4513;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
-        }
 
-        .btn-submit {
-            padding: 10px 25px;
-            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
-            height: 40px;
-            white-space: nowrap;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
-        }
-
-        .btn-submit:active {
-            transform: translateY(0);
-        }
-
-        /* Categories Table */
-        .categories-table {
+    
+        /* Questions Table */
+        .questions-table {
             background: white;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(139, 69, 19, 0.15);
@@ -214,7 +177,7 @@
             animation: slideUp 0.5s ease-out;
         }
 
-        .categories-table h2 {
+        .questions-table h2 {
             color: #654321;
             font-size: 1.5em;
             margin-bottom: 15px;
@@ -276,6 +239,21 @@
             background-color: #c0392b;
         }
 
+        
+
+        .modal-header h2 {
+            color: #654321;
+            font-size: 1.5em;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #654321;
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             body {
@@ -287,13 +265,18 @@
                 height: auto;
             }
             
-            .category-container, .categories-table {
+            .question-container, .questions-table {
                 padding: 20px;
             }
             
             .form-row {
                 flex-direction: column;
                 gap: 15px;
+            }
+            
+            .option-row {
+                flex-direction: column;
+                align-items: flex-start;
             }
             
             .btn-submit {
@@ -305,3 +288,4 @@
                 overflow-x: auto;
             }
         }
+   

@@ -1,6 +1,6 @@
 const Category = require('../Models/Category');
 
-
+ 
 exports.listCategory = function(req, res) {
     Category.getAllCategories((err, categories) => {
         if (err) {

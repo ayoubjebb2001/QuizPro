@@ -40,14 +40,14 @@ app.use(session({
     }
 }));
 
-app.use()
-// app.use('/', indexRouter);
+
+app.use('/', indexRouter);
 app.use('/signup',signupRouter);
 app.use('/auth',authRouter);
 app.use('/users', admin, usersRouter);
 app.use('/category',admin,categoryRouter);
-app.use('/question',questionRouter);
-
+app.use('/question',admin,questionRouter);
+app.use('/quiz',quizRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

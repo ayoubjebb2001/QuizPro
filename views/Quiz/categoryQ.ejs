@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catégories de Quiz</title>
+ <link rel="stylesheet" href="/css/categoryQ.css">
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <span>JS</span>QuizStarter
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" class="active">Accueil</a></li>
+                <li><a href="#">Quiz</a></li>
+                <li><a href="#">Classement</a></li>
+                <li><a href="#">À propos</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <div class="menu-toggle" >
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- <h1>Choisissez votre Quiz</h1> -->
+        
+        <div class="quiz-grid">
+            <%if(categories && categories.length>0){%>
+            <% categories.forEach(category=>{%>
+            <div class="quiz-card">
+                <h2><%=category.NAME%></h2>
+                <p><%=category.description%></p>
+                <button class="start-btn" data-id="<%=category.id%>">Start Quiz</button>
+            </div>
+            <%})%>
+            <%}%>
+
+           
+        </div>
+    </div>
+
+    <script>
+       
+    </script>
+</body>
+</html>

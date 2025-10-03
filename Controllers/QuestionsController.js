@@ -69,10 +69,12 @@ exports.UpdateQuestion = function(req, res) {
 exports.QuestionParCategory= function(req,res){
 
      const categoryId=req.params.id;
+     console.log("categoryid",categoryId);
+ 
      Question.QuestionParCategory(categoryId,(err,result)=>{
 
-        if(err)
-            return res.status(500).json({error:err.message});
+        if(err) return res.status(500).json({error:err.message});
+        res.json({message: " questions par category  est :",questions:result}); 
      })
-     res.json({message: " questions par category  est :",questions:result});
+    
 }

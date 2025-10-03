@@ -26,8 +26,7 @@ class AuthController {
             // Create new user
             const newUser = await User.create(username, password);
 
-
-            res.status(201).send();
+res.status(201).render('login',{username : username});
 
         } catch (error) {
             console.error('Signup error:', error);

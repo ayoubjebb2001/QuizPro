@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> <%=title-> </title>
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Tableau de Bord</h1>
+            <p>Bienvenue sur votre espace personnel</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon">📊</div>
+                </div>
+                <div class="stat-title">Score Moyen</div>
+                <div class="stat-value">85.7%</div>
+                <div class="stat-description">+5.2% par rapport au mois dernier</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon">🎮</div>
+                </div>
+                <div class="stat-title">Parties Jouées</div>
+                <div class="stat-value">127</div>
+                <div class="stat-description">42 parties ce mois-ci</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon">🏆</div>
+                </div>
+                <div class="stat-title">Classement Global</div>
+                <div class="stat-value">#15</div>
+                <div class="stat-description">Top 5% des joueurs</div>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="leaderboard-card">
+            <div class="leaderboard-header">
+                <h2 class="leaderboard-title">🏅 Classement Global</h2>
+                <span class="leaderboard-badge">Top 10</span>
+            </div>
+
+            <div class="leaderboard-list">
+                <div class="leaderboard-item">
+                    <div class="rank">1</div>
+                    <div class="player-avatar">AM</div>
+                    <div class="player-info">
+                        <div class="player-name">Alice Martin</div>
+                        <div class="player-games">245 parties</div>
+                    </div>
+                    <div class="player-score">98.5%</div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="rank">2</div>
+                    <div class="player-avatar">PD</div>
+                    <div class="player-info">
+                        <div class="player-name">Pierre Dubois</div>
+                        <div class="player-games">198 parties</div>
+                    </div>
+                    <div class="player-score">96.2%</div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="rank">3</div>
+                    <div class="player-avatar">SL</div>
+                    <div class="player-info">
+                        <div class="player-name">Sophie Laurent</div>
+                        <div class="player-games">312 parties</div>
+                    </div>
+                    <div class="player-score">94.8%</div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="rank">4</div>
+                    <div class="player-avatar">MB</div>
+                    <div class="player-info">
+                        <div class="player-name">Marc Bernard</div>
+                        <div class="player-games">167 parties</div>
+                    </div>
+                    <div class="player-score">93.5%</div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="rank">5</div>
+                    <div class="player-avatar">CG</div>
+                    <div class="player-info">
+                        <div class="player-name">Claire Gallet</div>
+                        <div class="player-games">189 parties</div>
+                    </div>
+                    <div class="player-score">92.1%</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+<script>
+    const userButton = document.getElementById('userButton');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    userButton.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('show');
+        userButton.classList.toggle('active');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!userButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.classList.remove('show');
+            userButton.classList.remove('active');
+        }
+    });
+
+    // Mobile Menu Toggle
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navbarMenu = document.getElementById('navbarMenu');
+
+    mobileToggle.addEventListener('click', function () {
+        navbarMenu.classList.toggle('show');
+    });
+</script>
+
+</html>

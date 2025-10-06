@@ -32,4 +32,27 @@ exports.update = (QuestionId, data, callback) => {
     ];
     db.query(sql, values, callback);
 };
+// Models/Question.js
+exports.QuestionParCategory = function(categoryId, callback) {
+  const sql = `
+    SELECT 
+      c.id AS category_id,
+      c.description,
+      c.NAME,
+      q.id AS question_id,
+      q.question,
+      q.answer,
+      q.options
+    FROM categories c
+    JOIN questions q ON c.id = q.category_id
+    WHERE q.category_id = ?
+  `;
+
+ 
+
+
+  db.query(sql, [categoryId], callback);
+};
+
+
 

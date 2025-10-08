@@ -25,7 +25,7 @@ document.querySelector('#categoryForm').addEventListener('submit', async (e) => 
     try {
         if (editMode && editCategoryId) {
             // Modifier
-            const res = await fetch(`/category/update/${editCategoryId}`, {
+            const res = await fetch(`/admin/categories/update/${editCategoryId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, description })
@@ -50,7 +50,7 @@ document.querySelectorAll('.btn-delete').forEach(button => {
 
         if(confirm("Voulez-vous vraiment supprimer cette catégorie ?")) {
             try {
-                const response = await fetch('/category/delete', {
+                const response = await fetch('/admin/categories/delete', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: categoryId })

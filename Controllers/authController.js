@@ -83,7 +83,7 @@ class AuthController {
             if (user.ROLE == "user") {
                 res.redirect('/home');
             } else {
-                res.redirect("/question/")
+                res.redirect("/admin/questions/")
             }
         } catch (error) {
             console.error('Login error:', error);

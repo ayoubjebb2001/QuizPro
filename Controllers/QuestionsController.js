@@ -11,8 +11,8 @@ exports.getAllQuestion = function (req, res) {
         result = result.map(item => {
             return {
                 ...item,
-                options: item.options ? JSON.parse(item.options) : [],
-                answer: item.answer ? JSON.parse(item.answer) : []
+                options: item.options,
+                answer: item.answer
             }
         });
 

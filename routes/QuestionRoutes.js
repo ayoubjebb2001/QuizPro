@@ -2,7 +2,11 @@
 var express = require('express');
 var router = express.Router();
 const QuestionController= require('../Controllers/QuestionsController');
+
+
 router.get('/',QuestionController.getAllQuestion);
+
+
 const Category = require('../Models/Category'); 
 const Question=require('../Models/Question');
 
@@ -13,8 +17,8 @@ router.get('/update/:id', (req, res) => {
         }
 
         if (questions && questions.length > 0) {
-            questions[0].options = questions[0].options ? JSON.parse(questions[0].options) : [];
-            questions[0].answer = questions[0].answer ? JSON.parse(questions[0].answer) : [];
+            questions[0].options = questions[0].options ?? [];
+            questions[0].answer = questions[0].answer ?? [];
         }
 
         Category.getAllCategories((err, categories) => {
@@ -33,7 +37,7 @@ router.get('/add', (req, res) => {
         if (err) return res.status(500).json({ error: err });
         res.render('Question/formQ', { 
             categories, 
-            questions: []  // باش ejs يلقاها ديما
+            questions: []
         }); 
     });
 });

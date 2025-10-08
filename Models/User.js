@@ -80,6 +80,50 @@ class User {
             throw error;
         }
     }
+
+    /**
+     * Get all users with their scores statistics
+     * Returns: user info + total games, average score, best score
+     */
+    static getUsersWithScores(callback) {
+        const sql = `
+            SELECT 
+                u.id,
+                u.username,
+                u.ROLE,
+                COUNT(s.id) as total_games,
+                ROUND(AVG(s.score), 2) as average_score,
+                MAX(s.score) as best_score,
+                MIN(s.score) as worst_score,
+                MAX(s.date) as last_played
+            FROM users u
+            LEFT JOIN scores s ON u.id = s.user_id
+            GROUP BY u.id, u.username, u.ROLE
+            ORDER BY average_score DESC, total_games DESC
+        `;
+
+        conn.query(sql, callback);
+    }
+
+    /**
+     * Get detailed scores for a specific user
+     */
+    static getUserScoresById(userId, callback) {
+        const sql = `
+            SELECT 
+                s.id,
+                s.score,
+                s.date,
+                c.NAME as category_name,
+                c.description as category_description
+            FROM scores s
+            LEFT JOIN categories c ON s.category_id = c.id
+            WHERE s.user_id = ?
+            ORDER BY s.date DESC
+        `;
+
+        conn.query(sql, [userId], callback);
+    }
 }
 
 module.exports = User;

@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+var admin = require('../middlewares/admin');
+const AdminController = require('../Controllers/AdminController');
+
+router.get('/users', admin, AdminController.showUsers);
 
 module.exports = router;

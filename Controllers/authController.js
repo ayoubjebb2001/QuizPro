@@ -46,27 +46,18 @@ class AuthController {
             const { username, password } = req.body;
 
             if (!username || !password) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Username and password are required'
-                });
+                return res.redirect('/auth/login',{ title: 'Login', error: 'Username and password are required', username: '' });
             }
 
             const user = await User.findByUsername(username);
 
             if (!user) {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Invalid username or password'
-                });
+                return res.redirect('/auth/login',{ title: 'Login', error: 'Invalid username or password', username: username });
             }
 
             const isPasswordValid = await User.validatePassword(password, user.password);
             if (!isPasswordValid) {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Invalid username or password'
-                })
+                return res.redirect('/auth/login',{ title: 'Login', error: 'Invalid username or password', username: username });
             }
 
             req.session.user = {
@@ -89,7 +80,7 @@ class AuthController {
             console.error('Login error:', error);
             res.status(500).json({
                 success: false,
-                message: 'Internat server error'
+                message: 'Internal server error'
             })
         }
 

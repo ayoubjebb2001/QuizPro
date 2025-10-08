@@ -1,15 +1,22 @@
 var express = require('express');
 var router = express.Router();
-const QuestionController= require('../Controllers/QuestionsController');
-const Category = require('../Models/Category'); 
-router.get('', (req, res) => {
-  Category.getAllCategories((err, result) => {
-    // if (err) return res.status(500).json({ error: err });
-    if(err) return res.render("Quiz/category",{categories:[],error:err})
-    
-   res.render("Quiz/categoryQ",{categories:result});
-  });
-});
+const QuizController = require('../Controllers/QuizController');
 
-router.get('/category/:id',QuestionController.QuestionParCategory);
-module.exports=router;
+/**
+ * Routes du Quiz
+ * Toute la logique métier est déléguée au QuizController
+ */
+
+// GET /quiz ou /quiz/start - Afficher les catégories disponibles
+router.get(['/', '/start'], QuizController.showCategories);
+
+// GET /quiz/category/:id - Afficher les questions d'une catégorie
+router.get('/category/:id', QuizController.showQuestions);
+
+// POST /quiz/submit - Soumettre les réponses et calculer le score
+router.post('/submit', QuizController.submitQuiz);
+
+// GET /quiz/result - Afficher les résultats du quiz
+router.get('/result', QuizController.showResult);
+
+module.exports = router;

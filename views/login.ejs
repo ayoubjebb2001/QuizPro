@@ -17,7 +17,7 @@
             <h2>Connexion</h2>
             <p class="subtitle">Entrez vos identifiants</p>
             
-            <form id="loginForm" method="post" action="/login">
+            <form id="loginForm" method="post" action="./login">
                 <div class="form-group">
                     <label for="username">username</label>
                     <% if(username) { %>
@@ -32,7 +32,7 @@
                     <input type="password" id="password" name="password" placeholder="••••••••" required>
                 </div>
                                 
-                <input type="submit" class="btn-login">Se connecter</input>
+                <input type="submit" class="btn-login" value="se connecter">
                 
                 <div class="signup-link">
                     Pas encore de compte ? <a href="/signup">S'inscrire</a>

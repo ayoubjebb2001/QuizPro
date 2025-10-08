@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/stylesheets/navbar.css">
+    <link rel="stylesheet" href="/stylesheets/result.css">
+</head>
+
+<body>
+    <%- include('../partials/navbar', {user: user}); %>
+        <div class="wrapper">
+            <h1>Résultat - <%= category ? category.NAME : 'Quiz' %>
+            </h1>
+            <div class="summary">
+                <div class="card">
+                    <h3>Score</h3>
+                    <div class="value">
+                        <%= result.score %>%
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Correct</h3>
+                    <div class="value good">
+                        <%= result.correct %>/<%= result.totalQuestions %>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Incorrect</h3>
+                    <div class="value bad">
+                        <%= result.totalQuestions - result.correct %>
+                    </div>
+                </div>
+            </div>
+            <div class="questions">
+                <% result.detail.forEach((d,idx)=>{ %>
+                    <div class="q-item <%= d.correct ? 'correct' : 'incorrect' %>">
+                        <div class="q-title">Question <%= idx+1 %>
+                        </div>
+                        <div class="answers">
+                            <span class="badge <%= d.correct ? 'badge-correct' : 'badge-wrong' %>">
+                                <%= d.correct ? 'Correct' : 'Faux' %>
+                            </span>
+                            <div><strong>Votre réponse :</strong>
+                                <%= d.userAnswer.length? d.userAnswer.join(', ') : ' —' %>
+                            </div>
+                            <div><strong>Réponse attendue :</strong>
+                                <%= d.expected.join(', ') %></div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <div class="actions">
+      <a href="/quiz/start" class="btn btn-outline">⟵ Retour aux catégories</a>
+      <a href="/quiz/category/<%= result.category_id %>" class="btn btn-primary">Rejouer la catégorie</a>
+      <a href="/home" class="btn btn-outline">Tableau de bord</a>
+    </div>
+  </div>
+  <script src="/javascripts/navbar.js"></script>
+</body>
+</html>

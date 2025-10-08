@@ -72,13 +72,18 @@ class AuthController {
             req.session.user = {
                 id: user.id,
                 username: user.username,
-                role: user.role
+                role: user.ROLE
             };
 
-            if(user.role == "user"){
-                res.redirect('user/dashboard');
+            // res.status(200).json({
+            //     message: "Login success",
+            //     user: req.session.user
+            // })
+
+            if(user.ROLE == "user"){
+                res.redirect('../home/');
             }else{
-                res.redirect("question/")
+                res.redirect("../question/")
             }
         } catch (error) {
             console.error('Login error:', error);
@@ -104,10 +109,7 @@ class AuthController {
                 // Clear the session cookie
                 res.clearCookie('connect.sid');
 
-                res.status(200).json({
-                    success: true,
-                    message: 'Logout successful'
-                });
+                res.redirect('auth/login');
             });
         } catch (error) {
             console.error('Logout error:', error);

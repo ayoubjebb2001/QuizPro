@@ -27,7 +27,7 @@ class AuthController {
             const newUser = await User.create(username, password);
 
 
-            res.status(201).render('login',{username : username});
+            res.status(201).render('login', { username: username });
 
         } catch (error) {
             console.error('Signup error:', error);
@@ -72,13 +72,18 @@ class AuthController {
             req.session.user = {
                 id: user.id,
                 username: user.username,
-                role: user.role
+                role: user.ROLE
             };
 
-            if(user.role == "user"){
-                res.redirect('user/dashboard');
-            }else{
-                res.redirect("question/")
+            // res.status(200).json({
+            //     message: "Login success",
+            //     user: req.session.user
+            // })
+
+            if (user.ROLE == "user") {
+                res.redirect('/home');
+            } else {
+                res.redirect("/question/")
             }
         } catch (error) {
             console.error('Login error:', error);
@@ -92,9 +97,10 @@ class AuthController {
 
     static logout(req, res) {
         try {
+            // Destroy the session
             req.session.destroy((err) => {
                 if (err) {
-                    console.error('Logout error:', err);
+                    console.error('Error destroying session:', err);
                     return res.status(500).json({
                         success: false,
                         message: 'Error logging out'
@@ -104,16 +110,17 @@ class AuthController {
                 // Clear the session cookie
                 res.clearCookie('connect.sid');
 
+                // Send success response
                 res.status(200).json({
                     success: true,
-                    message: 'Logout successful'
+                    message: 'Logged out successfully'
                 });
             });
         } catch (error) {
             console.error('Logout error:', error);
             res.status(500).json({
                 success: false,
-                message: 'Internal server error'
+                message: error.message
             });
         }
     }

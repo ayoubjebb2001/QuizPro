@@ -43,8 +43,6 @@ router.post('/add',QuestionController.createQuestion);
 router.delete('/delete/:id',QuestionController.DeleteQuestion);
 
 
-
-
-
 router.put('/update/:id',QuestionController.UpdateQuestion);
+
 module.exports = router;

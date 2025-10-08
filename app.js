@@ -5,14 +5,16 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
 var auth = require("./middlewares/auth");
-var admin = require("./middlewares/admin")
+var admin = require("./middlewares/admin");
+var guest = require("./middlewares/guest");
 
 var indexRouter = require('./routes/index');
 var signupRouter = require('./routes/signup');
 var authRouter = require('./routes/login');
 var usersRouter = require('./routes/users');
-var categoryRouter=require('./routes/category');
-var questionRouter=require('./routes/QuestionRoutes');
+var categoryRouter = require('./routes/category');
+var questionRouter = require('./routes/QuestionRoutes');
+var quizRouter = require('./routes/quiz');
 
 var app = express();
 
@@ -29,33 +31,37 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: false, 
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 // 24 hours
-    }
+  secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 // 24 hours
+  }
 }));
 
 
-app.use('/home',auth ,indexRouter);
-app.use('/signup',signupRouter);
-app.use('/auth',authRouter);
+app.use('/home', auth, indexRouter);
+app.use('/signup', guest, signupRouter);
+app.use('/auth', authRouter);
+
 
 app.use('/users', admin, usersRouter);
+app.use('/category', admin, categoryRouter);
+app.use('/question', admin, questionRouter);
+app.use('/quiz', auth, quizRouter);
 app.use('/category',admin,categoryRouter);
 app.use('/question',admin,questionRouter);
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

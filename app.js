@@ -44,7 +44,7 @@ app.use(session({
 
 app.use('/home', auth, indexRouter);
 app.use('/signup', guest, signupRouter);
-app.use('/auth', guest, authRouter);
+app.use('/auth', authRouter);
 
 
 app.use('/users', admin, usersRouter);

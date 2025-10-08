@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const conn = require('../config/db');
+const conn = require('../config/database');
 
 class User {
     constructor(username, password, role = 'user') {

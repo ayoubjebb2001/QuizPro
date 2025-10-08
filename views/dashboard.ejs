@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%=title %>
+    </title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', {user:user}) %>
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Tableau de Bord</h1>
+                <p>Bienvenue <span>
+                        <%= user.username%>
+                    </span> sur votre espace personnel</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon">📊</div>
+                    </div>
+                    <div class="stat-title">Score Moyen</div>
+                    <div class="stat-value">
+                        <%= stats.avgScore %>%
+                    </div>
+                    <div class="stat-description">
+                        <%= stats.gamesPlayed> 0 ? 'Basé sur ' + stats.gamesPlayed + ' parties' : 'Aucune partie jouée'
+                            %>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon">🎮</div>
+                    </div>
+                    <div class="stat-title">Parties Jouées</div>
+                    <div class="stat-value">
+                        <%= stats.gamesPlayed %>
+                    </div>
+                    <div class="stat-description">
+                        <%= stats.gamesPlayed> 0 ? 'Continuez !' : 'Commencez votre première partie' %>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon">🏆</div>
+                    </div>
+                    <div class="stat-title">Classement Global</div>
+                    <div class="stat-value">
+                        <%= stats.globalRank ? ('#' + stats.globalRank ): '—' %>
+                    </div>
+                    <div class="stat-description">
+                        <%= stats.globalRank ? 'Votre position actuelle' : 'Pas éligible (min 3 parties)' %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="leaderboard-card">
+                <div class="leaderboard-header">
+                    <h2 class="leaderboard-title">🏅 Classement Global</h2>
+                    <span class="leaderboard-badge">Top 5</span>
+                </div>
+                <% if(leaderboard && leaderboard.length){ %>
+                    <div class="leaderboard-list">
+                        <% leaderboard.forEach(item=> { %>
+                            <div class="leaderboard-item <%= user && user.id === item.user_id ? 'current-user' : '' %>">
+                                <div class="rank">
+                                    <%= item.rank %>
+                                </div>
+                                <div class="player-avatar">
+                                    <%= item.username.substring(0,2).toUpperCase() %>
+                                </div>
+                                <div class="player-info">
+                                    <div class="player-name">
+                                        <%= item.username %>
+                                    </div>
+                                    <div class="player-games">
+                                        <%= item.gamesPlayed %> parties
+                                    </div>
+                                </div>
+                                <div class="player-score">
+                                    <%= item.avgScore %>%
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <% } else { %>
+                        <p style="padding:1rem;">Aucun classement disponible (au moins 3 parties requises).</p>
+                        <% } %>
+            </div>
+
+            <!-- Category Breakdown -->
+            <div class="leaderboard-card">
+                <div class="leaderboard-header">
+                    <h2 class="leaderboard-title">📂 Performance par Catégorie</h2>
+                </div>
+                <% if(categoryBreakdown && categoryBreakdown.length){ %>
+                    <table style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr style="text-align:left; border-bottom:1px solid #ddd;">
+                                <th style="padding:.5rem;">Catégorie</th>
+                                <th style="padding:.5rem;">Tentatives</th>
+                                <th style="padding:.5rem;">Moyenne</th>
+                                <th style="padding:.5rem;">Meilleur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% categoryBreakdown.forEach(c=> { %>
+                                <tr>
+                                    <td style="padding:.5rem;">
+                                        <%= c.category %>
+                                    </td>
+                                    <td style="padding:.5rem;">
+                                        <%= c.attempts %>
+                                    </td>
+                                    <td style="padding:.5rem;">
+                                        <%= c.average %>%
+                                    </td>
+                                    <td style="padding:.5rem;">
+                                        <%= c.best %>%
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <p style="padding:1rem;">Aucune donnée de catégorie pour l'instant.</p>
+                        <% } %>
+            </div>
+
+            <!-- Recent Scores -->
+            <div class="leaderboard-card">
+                <div class="leaderboard-header">
+                    <h2 class="leaderboard-title">🕒 Derniers Scores</h2>
+                </div>
+                <% if(recentScores && recentScores.length){ %>
+                    <ul style="list-style:none; padding:0; margin:0;">
+                        <% recentScores.forEach(r=> { %>
+                            <li
+                                style="display:flex; justify-content:space-between; padding:.5rem .75rem; border-bottom:1px solid #eee;">
+                                <span><strong>
+                                        <%= r.category %>
+                                    </strong> - <%= r.played_at %></span>
+                                <span>
+                                    <%= r.score %>%
+                                </span>
+                            </li>
+                            <% }) %>
+                    </ul>
+                    <% } else { %>
+                        <p style="padding:1rem;">Pas encore de parties récentes.</p>
+                        <% } %>
+            </div>
+        </main>
+</body>
+<script src="../js/navbar.js">
+
+</script>
+
+</html>

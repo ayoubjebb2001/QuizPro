@@ -53,11 +53,11 @@ exports.newCategory = function(req, res) {
         }
 
         // Après ajout, rediriger vers la liste pour voir la nouvelle catégorie
-        res.redirect('/category');
+        res.redirect('/admin/categories/');
     });
 };
 
-        res.redirect('/category');
+        res.redirect('/admin/categories/');
     });
 };
 exports.updateCategory = async function(req, res) {

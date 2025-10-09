@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/stylesheets/navbar.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .users-table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: white;
+        }
+
+        .table-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #ecf0f1;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #ecf0f1;
+            color: #34495e;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-admin {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .role-user {
+            background: #3498db;
+            color: white;
+        }
+
+        .score-cell {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .score-high {
+            color: #27ae60;
+        }
+
+        .score-medium {
+            color: #f39c12;
+        }
+
+        .score-low {
+            color: #e74c3c;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: #95a5a6;
+            font-size: 1.1rem;
+        }
+
+        .no-data svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .text-muted {
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .users-table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/navbar', {user: user}); %>
+
+        <div class="container">
+            <h1>📊 Gestion des Utilisateurs</h1>
+            <p class="subtitle">Vue d'ensemble des utilisateurs et de leurs performances</p>
+
+            <!-- Statistics Summary -->
+            <div class="stats-summary">
+                <div class="stat-card">
+                    <h3>Total Utilisateurs</h3>
+                    <div class="value">
+                        <%= users.length %>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Utilisateurs Actifs</h3>
+                    <div class="value">
+                        <%= users.filter(u=> u.total_games > 0).length %>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Parties</h3>
+                    <div class="value">
+                        <%= users.reduce((sum, u)=> sum + (u.total_games || 0), 0) %>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Score Moyen Global</h3>
+                    <div class="value">
+                        <%= users.filter(u=> u.average_score).length > 0
+                            ? Math.round(users.reduce((sum, u) => sum + (u.average_score || 0), 0) / users.filter(u =>
+                            u.average_score).length)
+                            : 0
+                            %>%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="users-table-container">
+                <div class="table-header">
+                    <h2>Liste des Utilisateurs</h2>
+                </div>
+
+                <% if (users && users.length> 0) { %>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom d'utilisateur</th>
+                                <th>Rôle</th>
+                                <th class="text-center">Parties Jouées</th>
+                                <th class="text-center">Score Moyen</th>
+                                <th class="text-center">Meilleur Score</th>
+                                <th class="text-center">Pire Score</th>
+                                <th>Dernière Partie</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% users.forEach(function(u) { %>
+                                <tr>
+                                    <td><strong>#<%= u.id %></strong></td>
+                                    <td><strong>
+                                            <%= u.username %>
+                                        </strong></td>
+                                    <td>
+                                        <span class="role-badge role-<%= u.ROLE %>">
+                                            <%= u.ROLE %>
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <%= u.total_games || 0 %>
+                                    </td>
+                                    <td class="text-center">
+                                        <% if (u.average_score) { %>
+                                            <span
+                                                class="score-cell <%= u.average_score >= 70 ? 'score-high' : u.average_score >= 50 ? 'score-medium' : 'score-low' %>">
+                                                <%= u.average_score %>%
+                                            </span>
+                                            <% } else { %>
+                                                <span class="text-muted">—</span>
+                                                <% } %>
+                                    </td>
+                                    <td class="text-center">
+                                        <% if (u.best_score) { %>
+                                            <span class="score-cell score-high">
+                                                <%= u.best_score %>%
+                                            </span>
+                                            <% } else { %>
+                                                <span class="text-muted">—</span>
+                                                <% } %>
+                                    </td>
+                                    <td class="text-center">
+                                        <% if (u.worst_score) { %>
+                                            <span class="score-cell score-low">
+                                                <%= u.worst_score %>%
+                                            </span>
+                                            <% } else { %>
+                                                <span class="text-muted">—</span>
+                                                <% } %>
+                                    </td>
+                                    <td>
+                                        <% if (u.last_played) { %>
+                                            <span class="text-muted">
+                                                <%= new Date(u.last_played).toLocaleDateString('fr-FR', {
+                                                    year: 'numeric' , month: 'short' , day: 'numeric' }) %>
+                                            </span>
+                                            <% } else { %>
+                                                <span class="text-muted">Jamais joué</span>
+                                                <% } %>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <div class="no-data">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            <p>Aucun utilisateur trouvé</p>
+                        </div>
+                        <% } %>
+            </div>
+        </div>
+
+        <script src="/js/navbar.js"></script>
+</body>
+
+</html>

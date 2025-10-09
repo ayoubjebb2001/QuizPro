@@ -51,10 +51,6 @@ app.use('/users', admin, usersRouter);
 app.use('/category', admin, categoryRouter);
 app.use('/question', admin, questionRouter);
 app.use('/quiz', auth, quizRouter);
-app.use('/category',admin,categoryRouter);
-app.use('/question',admin,questionRouter);
-
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

@@ -1,18 +1,16 @@
-const { json } = require('express');
 const Category = require('../Models/Category');
 const Question = require('../Models/Question');
 const Score = require('../Models/Score');
 
-/**
- * QuizController - Gère toute la logique métier du quiz
- */
 class QuizController {
-    /**
-     * GET /quiz/start - Afficher la liste des catégories
-     */
     static showCategories(req, res) {
-        Category.getAllCategories((err, result) => {
+        Category.getAllCategories((err, categories) => {
             if (err) {
+                console.error('showCategories error:', err);
+                console.log('showCategories payload:', {
+                    categories: [],
+                    error: err.message
+                });
                 return res.render('Quiz/start', {
                     title: 'Choisir une catégorie',
                     categories: [],
@@ -20,23 +18,31 @@ class QuizController {
                     user: req.session.user
                 });
             }
+
+            console.log('showCategories payload:', {
+                categories,
+                error: null
+            });
+
             res.render('Quiz/start', {
                 title: 'Choisir une catégorie',
-                categories: result,
+                categories,
                 error: null,
                 user: req.session.user
             });
         });
     }
 
-    /**
-     * GET /quiz/category/:id - Afficher les questions d'une catégorie
-     */
     static showQuestions(req, res) {
-        const categoryId = parseInt(req.params.id, 10);
+        const categoryId = req.params.id;
 
-        // Validation de l'ID
-        if (isNaN(categoryId)) {
+        if (!categoryId) {
+            console.log('showQuestions payload:', {
+                category: null,
+                questions: [],
+                error: 'Catégorie invalide.'
+            });
+
             return res.status(400).render('Quiz/questions', {
                 title: 'Quiz',
                 user: req.session.user || null,
@@ -46,10 +52,15 @@ class QuizController {
             });
         }
 
-        // Utiliser QuestionParCategory du modèle Question
-        Question.QuestionParCategory(categoryId, (err, result) => {
+        Question.QuestionParCategory(categoryId, (err, rows) => {
             if (err) {
-                console.error('Error loading questions:', err);
+                console.error('showQuestions error:', err);
+                console.log('showQuestions payload:', {
+                    category: null,
+                    questions: [],
+                    error: 'Erreur serveur lors du chargement du quiz.'
+                });
+
                 return res.status(500).render('Quiz/questions', {
                     title: 'Quiz',
                     user: req.session.user || null,
@@ -59,8 +70,13 @@ class QuizController {
                 });
             }
 
-            // Vérifier s'il y a des résultats
-            if (!result || result.length === 0) {
+            if (!rows || rows.length === 0) {
+                console.log('showQuestions payload:', {
+                    category: null,
+                    questions: [],
+                    error: 'Aucune question disponible pour cette catégorie.'
+                });
+
                 return res.status(404).render('Quiz/questions', {
                     title: 'Quiz',
                     user: req.session.user || null,
@@ -70,171 +86,138 @@ class QuizController {
                 });
             }
 
-            // Extraire la catégorie du premier résultat
             const category = {
-                id: result[0].category_id,
-                NAME: result[0].NAME,
-                description: result[0].description
+                id: rows[0].category_id,
+                NAME: rows[0].NAME,
+                description: rows[0].description
             };
 
-            // Mapper et parser les questions avec leurs options et réponses
-            const questions = result.map(row => {
-                let options = [];
-                let answer = [];
-
-                // Parser options (JSON string -> Array)
-                try {
-                    options = typeof row.options === 'string' ? JSON.parse(row.options) : row.options;
-                    if (!Array.isArray(options)) options = [];
-                } catch (e) {
-                    console.error('Error parsing options for question', row.question_id, e);
-                    options = [];
-                }
-
-                // Parser answer (JSON string -> Array)
-                try {
-                    answer = typeof row.answer === 'string' ? JSON.parse(row.answer) : row.answer;
-                    if (!Array.isArray(answer)) answer = [];
-                } catch (e) {
-                    console.error('Error parsing answer for question', row.question_id, e);
-                    answer = [];
-                }
+            const questions = rows.map((row) => {
+                const options = Array.isArray(row.options) ? row.options : [];
+                const answers = Array.isArray(row.answer) ? row.answer : [];
 
                 return {
                     id: row.question_id,
                     question: row.question,
-                    options: options,
-                    answer: answer
+                    options,
+                    rawOptions: row.options,
+                    rawAnswer: row.answer,
+                    answers
                 };
-            });
-
-            // Stocker les réponses correctes en session (SANS les envoyer au client)
-            const answers = {};
-            questions.forEach(q => {
-                answers[q.id] = q.answer;
             });
 
             req.session.currentQuiz = {
                 category_id: categoryId,
-                answers: answers,
-                questions: questions.map(q => ({
-                    id: q.id,
-                    question: q.question
-                }))
+                questions,
+                answers: questions.reduce((acc, question) => {
+                    acc[question.id] = question.answers;
+                    return acc;
+                }, {})
             };
 
-            // Préparer sanitizedQuestions SANS les réponses correctes (pour le client)
-            const sanitizedQuestions = questions.map(q => ({
-                id: q.id,
-                question: q.question,
-                options: q.options
-            }));
+            console.log('showQuestions payload:', {
+                category,
+                questions,
+                error: null
+            });
 
             res.render('Quiz/questions', {
                 title: `Quiz - ${category.NAME}`,
                 user: req.session.user || null,
-                questions: sanitizedQuestions,
                 category,
+                questions,
                 error: null
             });
         });
     }
 
-    /**
-     * POST /quiz/submit - Évaluer les réponses et calculer le score
-     */
     static submitQuiz(req, res) {
-        // Vérifier si un quiz est en cours
         if (!req.session.currentQuiz) {
             return res.status(400).redirect('/quiz/start');
         }
 
-        // Vérifier l'authentification
         if (!req.session.user) {
             return res.status(401).redirect('/auth');
         }
 
         const { currentQuiz } = req.session;
-        const submittedAnswers = req.body; // Format: { q_1: "option", q_2: "option", ... }
+        const submittedAnswers = req.body;
 
         let totalQuestions = 0;
         let correctAnswers = 0;
         const detail = [];
 
-        // Évaluer chaque question
-        Object.entries(currentQuiz.answers).forEach(([questionId, correctAnswersArray]) => {
-            totalQuestions += 1;
-            const fieldName = 'q_' + questionId;
-            const userAnswer = submittedAnswers[fieldName];
+        Object.keys(currentQuiz.answers).forEach((questionId) => {
+            const expected = currentQuiz.answers[questionId] || [];
+            const fieldName = `q_${questionId}`;
+            let received = submittedAnswers[fieldName];
+            if (received === undefined) {
+                const altFieldName = `${fieldName}[]`;
+                if (Object.prototype.hasOwnProperty.call(submittedAnswers, altFieldName)) {
+                    received = submittedAnswers[altFieldName];
+                }
+            }
+            const userAnswerArray = Array.isArray(received) ? received : [received].filter(Boolean);
 
-            // Normaliser les réponses en ensembles (Set) pour comparaison
-            const correctSet = new Set(
-                (correctAnswersArray || []).map(ans => String(ans).trim())
-            );
-            const userSet = new Set(
-                [].concat(userAnswer || []).map(ans => String(ans).trim())
-            );
+            const expectedSorted = [...expected].sort();
+            const userSorted = [...userAnswerArray].sort();
 
-            // Comparer les ensembles
-            const isCorrect =
-                correctSet.size === userSet.size &&
-                [...correctSet].every(ans => userSet.has(ans));
+            const isCorrect = JSON.stringify(expectedSorted) === JSON.stringify(userSorted);
 
             if (isCorrect) {
                 correctAnswers += 1;
             }
 
+            totalQuestions += 1;
+
             detail.push({
-                question_id: Number(questionId),
-                correct: isCorrect,
-                userAnswer: [...userSet],
-                expected: [...correctSet]
+                question_id: questionId,
+                expected: expectedSorted,
+                userAnswer: userSorted,
+                correct: isCorrect
             });
         });
 
-        // Calculer le score en pourcentage
-        const scorePercent =
-            totalQuestions === 0 ? 0 : Math.round((correctAnswers / totalQuestions) * 100);
+        const score = totalQuestions === 0 ? 0 : Math.round((correctAnswers / totalQuestions) * 100);
 
-        // Insérer le score dans la base de données avec le modèle Score
-        Score.create(req.session.user.id, scorePercent, currentQuiz.category_id, (err) => {
+        Score.create(req.session.user.id, score, currentQuiz.category_id, (err) => {
             if (err) {
-                console.error('Error saving score:', err);
-                // Continuer même si la sauvegarde échoue
+                console.error('submitQuiz score save error:', err);
             }
 
-            // Stocker le résultat en session pour la page de résultat
             req.session.lastResult = {
                 category_id: currentQuiz.category_id,
-                score: scorePercent,
+                score,
                 totalQuestions,
                 correct: correctAnswers,
                 detail
             };
 
-            // Nettoyer le quiz en cours
             delete req.session.currentQuiz;
 
-            // Rediriger vers la page de résultat
             res.redirect('/quiz/result');
         });
     }
 
-    /**
-     * GET /quiz/result - Afficher les résultats du quiz
-     */
     static showResult(req, res) {
         const result = req.session.lastResult;
 
-        // Vérifier si un résultat existe
         if (!result) {
+            console.log('showResult payload:', {
+                result: null,
+                category: null
+            });
             return res.redirect('/quiz/start');
         }
 
-        // Charger les informations de la catégorie avec le modèle Category
         Category.getCategoryById(result.category_id, (err, rows) => {
             if (err) {
-                console.error('Error loading category for result:', err);
+                console.error('showResult error:', err);
+                console.log('showResult payload:', {
+                    result,
+                    category: null
+                });
+
                 return res.render('Quiz/result', {
                     title: 'Résultat du Quiz',
                     user: req.session.user || null,
@@ -243,9 +226,13 @@ class QuizController {
                 });
             }
 
-            const category = rows[0] || null;
+            const category = rows && rows[0] ? rows[0] : null;
 
-            // Rendre la vue de résultat
+            console.log('showResult payload:', {
+                result,
+                category
+            });
+
             res.render('Quiz/result', {
                 title: 'Résultat du Quiz',
                 user: req.session.user || null,

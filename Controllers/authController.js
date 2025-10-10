@@ -113,7 +113,7 @@ class AuthController {
                 success: false,
                 message: error.message
             });
-        }
+       }
     }
 
 }

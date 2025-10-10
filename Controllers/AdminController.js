@@ -19,6 +19,7 @@ class AdminController {
                 });
             }
 
+            // res.send(users.filter(u => u.average_score).length);
             res.render('admin/users', {
                 title: 'Gestion des Utilisateurs',
                 user: req.session.user,

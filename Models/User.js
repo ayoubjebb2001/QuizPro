@@ -95,10 +95,10 @@ class User {
                 ROUND(AVG(s.score), 2) as average_score,
                 MAX(s.score) as best_score,
                 MIN(s.score) as worst_score,
-                MAX(s.date) as last_played
+                MAX(s.taken_at) as last_played
             FROM users u
             LEFT JOIN scores s ON u.id = s.user_id
-            GROUP BY u.id, u.username, u.ROLE
+            GROUP BY u.id, u.username, u.ROLE HAVING u.role = 'user'
             ORDER BY average_score DESC, total_games DESC
         `;
 
@@ -113,13 +113,13 @@ class User {
             SELECT 
                 s.id,
                 s.score,
-                s.date,
+                s.taken_at,
                 c.NAME as category_name,
                 c.description as category_description
             FROM scores s
             LEFT JOIN categories c ON s.category_id = c.id
             WHERE s.user_id = ?
-            ORDER BY s.date DESC
+            ORDER BY s.taken_at DESC
         `;
 
         conn.query(sql, [userId], callback);

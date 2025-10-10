@@ -7,7 +7,8 @@
     <title>
         <%= title %>
     </title>
-    <link rel="stylesheet" href="/stylesheets/navbar.css">
+    <!-- <link rel="stylesheet" href="/stylesheets/navbar.css"> -->
+     <link rel="stylesheet" href="/css/sidebar.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,7 +16,11 @@
             margin: 0;
             padding: 0;
         }
-
+.layout {
+    display: flex;
+    min-height: 100vh;
+    background: #f5f7fa;
+}
         .container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -186,7 +191,9 @@
 </head>
 
 <body>
-    <%- include('../partials/navbar', {user: user}); %>
+    <div class="layout">
+    <!-- <%- include('../partials/navbar', {user: user}); %> -->
+     <%- include('../partials/sidebar') %>
 
         <div class="container">
             <h1>📊 Gestion des Utilisateurs</h1>
@@ -312,6 +319,7 @@
                         </div>
                         <% } %>
             </div>
+        </div>
         </div>
 
         <script src="/js/navbar.js"></script>

@@ -53,7 +53,7 @@ app.use('/auth', authRouter);
 // Legacy admin routes (keeping for backward compatibility)
 app.use('/admin/users', admin, usersRouter);
 app.use('/admin/categories', admin, categoryRouter);
-app.use('/admin/questions', admin, questionRouter);
+app.use('/admin/questions',admin, questionRouter);
 
 app.use('/quiz', auth, quizRouter);
 

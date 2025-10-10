@@ -27,7 +27,7 @@ class AuthController {
             const newUser = await User.create(username, password);
 
 
-            res.status(201).render('login', { username: username });
+            res.status(201).render('auth/login', { username: username });
 
         } catch (error) {
             console.error('Signup error:', error);
@@ -63,7 +63,7 @@ class AuthController {
             req.session.user = {
                 id: user.id,
                 username: user.username,
-                role: user.ROLE
+                role: user.role
             };
 
             // res.status(200).json({
@@ -71,7 +71,7 @@ class AuthController {
             //     user: req.session.user
             // })
 
-            if (user.ROLE == "user") {
+            if (user.role == "user") {
                 res.redirect('/home');
             } else {
                 res.redirect("/admin/questions/")
